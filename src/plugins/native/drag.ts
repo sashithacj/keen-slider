@@ -59,7 +59,7 @@ export default function Drag(
 
     const value = xy(e)
     if (dragJustStarted) {
-      if (!isSlide(e)) return dragStop(e)
+      //if (!isSlide(e)) return dragStop(e)
       slider.emit('dragChecked')
       dragJustStarted = false
     }
@@ -147,6 +147,15 @@ export default function Drag(
   slider.on('created', update)
 
   const pan = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      const { dx, dy } = gestureState
+      if (Math.abs(dx) > 2 || Math.abs(dy) < 2) {
+        inputHandler(dragStart)({ ...evt, ...gestureState })
+        console.log('onMoveShouldSetPanResponder', gestureState)
+        return true
+      }
+      return false
+    },
     onPanResponderMove: inputHandler(drag),
     onPanResponderRelease: inputHandler(dragStop),
     onPanResponderTerminate: inputHandler(dragStop),
