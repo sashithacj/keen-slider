@@ -44,7 +44,7 @@ export default function Native<O>(
         slider.slidesProps.push(
           ...Array(diff)
             .fill(null)
-            .map(() => ({ ref: createRef() }))
+            .map(() => ({ ref: createRef() } as unknown))
         )
       } else {
         slider.slidesProps.splice(diff)

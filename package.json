@@ -45,7 +45,7 @@
     "build": "tsc && rollup -c && npm run build:types",
     "dev": "tsc-watch",
     "test": "jest",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts --fix",
     "build:types": "npm run extract && npm run fix:types",
     "extract": "npm run extract:default && npm run extract:react && npm run extract:vue && npm run extract:react-native",
     "extract:default": "npx api-extractor run -c ./api-extractor.json && cp -f ./keen-slider.d.ts ./keen-slider.es.d.ts",
