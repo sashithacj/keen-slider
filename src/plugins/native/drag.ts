@@ -149,9 +149,12 @@ export default function Drag(
   const pan = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => {
       const { dx, dy } = gestureState
-      if (Math.abs(dx) > 2 || Math.abs(dy) < 2) {
+      if (
+        Math.abs(dx) > 2 ||
+        Math.abs(dy) < 2 ||
+        5 * Math.abs(dx) >= Math.abs(dy)
+      ) {
         inputHandler(dragStart)({ ...evt, ...gestureState })
-        console.log('onMoveShouldSetPanResponder', gestureState)
         return true
       }
       return false
