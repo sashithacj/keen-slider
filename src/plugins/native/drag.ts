@@ -37,6 +37,7 @@ export default function Drag(
   let min
   let max
   function dragStart(e) {
+    console.log('dragStarting')
     if (
       dragActive ||
       !slider.track.details ||
@@ -50,9 +51,11 @@ export default function Drag(
     isSlide(e)
     lastValue = xy(e)
     slider.emit('dragStarted')
+    console.log('dragStarted', new Date())
     return true
   }
   function drag(e) {
+    console.log('dragging')
     if (!dragActive || dragIdentifier !== e.idChanged) {
       return
     }
@@ -79,6 +82,7 @@ export default function Drag(
       typeof speed === 'function' ? speed : val => val * (speed as number)
   }
   function dragStop(e) {
+    console.log('dragStop')
     if (!dragActive || dragIdentifier !== e.idChanged) return
     dragActive = false
     slider.emit('dragEnded')
@@ -151,18 +155,23 @@ export default function Drag(
       const { dx, dy } = gestureState
       if (
         Math.abs(dx) > 2 ||
-        Math.abs(dy) < 2 ||
-        5 * Math.abs(dx) >= Math.abs(dy)
+        (Math.abs(dy) > 2 && Math.abs(dx) >= 0.5 * Math.abs(dy))
       ) {
+        console.log(`onMove true dx:${dx} dy:${dy}`)
         inputHandler(dragStart)({ ...evt, ...gestureState })
         return true
       }
+      console.log(`onMove false dx:${dx} dy:${dy}`)
       return false
     },
     onPanResponderMove: inputHandler(drag),
     onPanResponderRelease: inputHandler(dragStop),
     onPanResponderTerminate: inputHandler(dragStop),
-    onStartShouldSetPanResponder: inputHandler(dragStart),
+    onStartShouldSetPanResponder: (e, gestureState) => {
+      console.log('onStartShouldSetPanResponder', gestureState)
+      inputHandler(dragStart)({ ...e, ...gestureState })
+      return true
+    },
   })
   Object.assign(slider.containerProps, pan.panHandlers)
 }
